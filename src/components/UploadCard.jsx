@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Camera, X, Loader2 } from 'lucide-react';
 import { useModel } from '../hooks/useModel';
+import { interpretSkinResult } from '../utils/analysis';
 
 const UploadCard = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -105,19 +106,39 @@ const UploadCard = () => {
                         </div>
 
                         {predictions.length > 0 && (
-                            <div className="bg-brand-50 rounded-xl p-6 border border-brand-100">
-                                <h3 className="font-semibold text-brand-900 mb-3">Analysis Results</h3>
-                                <div className="space-y-2">
-                                    {predictions.map((pred, index) => (
-                                        <div key={index} className="flex justify-between items-center text-sm">
-                                            <span className="capitalize text-slate-700">{pred.className}</span>
-                                            <span className="font-medium text-brand-700">
-                                                {(pred.probability * 100).toFixed(2)}%
+                            (() => {
+                                const result = interpretSkinResult(predictions);
+                                return (
+                                    <div className={`${result.theme.bg} rounded-xl p-6 border ${result.theme.border} transition-all animate-in fade-in slide-in-from-bottom-4 duration-500`}>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h3 className="font-semibold text-brand-900 mb-1">AI Analysis Result</h3>
+                                                <p className="text-sm text-slate-600">{result.message}</p>
+                                            </div>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${result.theme.badge}`}>
+                                                {result.badge}
                                             </span>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
+
+                                        <div className="mt-4">
+                                            <div className="flex justify-between text-xs mb-1">
+                                                <span className="text-slate-500 font-medium">Confidence Score</span>
+                                                <span className={result.theme.text}>{result.score}%</span>
+                                            </div>
+                                            <div className="w-full bg-slate-200 rounded-full h-2">
+                                                <div
+                                                    className={`h-2 rounded-full transition-all duration-1000 ${result.status === 'high' ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                                                    style={{ width: `${result.score}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        <p className="mt-4 text-[10px] text-slate-400 italic">
+                                            Disclaimer: This is a prototype simulation. Not for medical diagnosis.
+                                        </p>
+                                    </div>
+                                );
+                            })()
                         )}
                     </div>
                 ) : (
