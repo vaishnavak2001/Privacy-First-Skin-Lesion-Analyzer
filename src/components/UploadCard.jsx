@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Camera, X, Loader2 } from 'lucide-react';
+import { Camera, X, Loader2, ShieldCheck } from 'lucide-react';
 import { useModel } from '../hooks/useModel';
 import { interpretSkinResult } from '../utils/analysis';
 
@@ -204,6 +204,14 @@ const UploadCard = () => {
                         </button>
                     )}
 
+                </div>
+
+                <div className="mt-8 p-4 bg-brand-50 border border-brand-100 rounded-xl flex items-start gap-3">
+                    <ShieldCheck className="w-5 h-5 text-brand-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-brand-900">
+                        <span className="font-semibold text-brand-900 block sm:inline">Privacy Notice:</span>{' '}
+                        All analysis happens 100% on your device. Your photos are never sent to a cloud server.
+                    </p>
                 </div>
             </div>
         </div>
